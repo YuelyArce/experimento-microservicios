@@ -1,3 +1,6 @@
+version: '3.8'
+
+services:
   kafka:
     image: bitnami/kafka:latest
     ports:
@@ -7,4 +10,22 @@
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Create topics automatically
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Create topics automáticamente
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - default
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - default
