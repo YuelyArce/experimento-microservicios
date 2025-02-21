@@ -25,5 +25,8 @@ python3 ventas_service/app.py
 En otra terminal ejecutar el consumer
 python3 recomendacion_service/app.py
 
-### Prueba
-curl -X POST http://127.0.0.1:5002/recomendar -H "Content-Type: application/json" -d '{"video_id": "1111"}'
+### Prueba de reomendación
+curl -X POST http://127.0.0.1:5001/recomendar -H "Content-Type: application/json" -d '{"video_id": "12345"}'
+
+### Prueba de ventas
+curl -X POST http://localhost:5002/registroVenta -H "Content-Type: application/json" -d '{"producto_id": "123", "cantidad": 2, "precio": 10.5}'

@@ -1,5 +1,5 @@
 from confluent_kafka import Consumer
-from flask import Flask
+from flask import Flask, request, jsonify
 import threading
 
 app = Flask(__name__)
@@ -12,11 +12,24 @@ print('Kafka Consumer has been initiated...')
 def home():
     return "Servicio de Recomendaciones en ejecución"
 
+@app.route('/recomendar', methods=['POST'])
+def recomendar():
+    data = request.json
+    video_id = data.get("video_id")
+
+    if not video_id:
+        return jsonify({"error": "Falta el video_id"}), 400
+
+    # Generar recomendaciones
+    recomendaciones = [f"video_recomendado_{i}" for i in range(1, 4)]
+
+    return jsonify({"video_id": video_id, "recomendaciones": recomendaciones})
+
 def consume_messages():
-    c.subscribe(['user-tracker'])
+    c.subscribe(['ventas-topic'])
 
     while True:
-        msg = c.poll(1.0)  # Timeout de 1 segundo
+        msg = c.poll(1.0)
         if msg is None:
             continue
         if msg.error():
