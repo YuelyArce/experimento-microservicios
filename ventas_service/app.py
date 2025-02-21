@@ -1,35 +1,39 @@
-from confluent_kafka import Consumer
-from flask import Flask
-import threading
+from flask import Flask, request, jsonify
+from confluent_kafka import Producer
+import json
+import time
 
 app = Flask(__name__)
 
-# Configurar el consumidor de Kafka
-c = Consumer({'bootstrap.servers': 'localhost:9092', 'group.id': 'python-consumer', 'auto.offset.reset': 'earliest'})
-print('Kafka Consumer has been initiated...')
+# Configurar el productor de Kafka
+p = Producer({'bootstrap.servers': 'localhost:9092'})
+print('Kafka Producer has been initiated...')
 
-@app.route("/")
+@app.route('/')
 def home():
     return "Servicio de Recomendaciones en ejecución"
 
-def consume_messages():
-    c.subscribe(['user-tracker'])
+@app.route('/recomendar', methods=['POST'])
+def recomendar():
+    data = request.json
+    video_id = data.get("video_id")
 
-    while True:
-        msg = c.poll(1.0)  # Timeout de 1 segundo
-        if msg is None:
-            continue
-        if msg.error():
-            print('Error: {}'.format(msg.error()))
-            continue
-        data = msg.value().decode('utf-8')
-        print(f"Mensaje recibido: {data}")
-    c.close()
+    if not video_id:
+        return jsonify({"error": "Falta el video_id"}), 400
 
-if __name__ == "__main__":
-    # Iniciar el consumidor en un hilo separado
-    consumer_thread = threading.Thread(target=consume_messages)
-    consumer_thread.start()
+    # Generar recomendaciones
+    recomendaciones = [f"video_recomendado_{i}" for i in range(1, 4)]
 
-    # Iniciar la aplicación Flask
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    # Crear el mensaje para Kafka (convertir a JSON)
+    m = {"video_id": video_id, "recomendaciones": recomendaciones}
+    message = json.dumps(m).encode('utf-8')  # Convertir el diccionario a JSON y luego a bytes
+
+    # Enviar el mensaje a Kafka
+    p.produce('user-tracker', message)
+    p.flush()  # Asegura que se envíen todos los mensajes
+    print(f"Mensaje enviado a Kafka: {message}")
+
+    return jsonify(m)  # Retorna el mensaje enviado como respuesta
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5002, debug=True)
