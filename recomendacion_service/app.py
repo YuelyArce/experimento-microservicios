@@ -1,30 +1,13 @@
 from confluent_kafka import Consumer
 from flask import Flask, request, jsonify
+from flask_restful import Api
 import threading
+from vistas import Recomendaciones, Home
 
-app = Flask(__name__)
 
 # Configurar el consumidor de Kafka
 c = Consumer({'bootstrap.servers': 'localhost:9092', 'group.id': 'python-consumer', 'auto.offset.reset': 'earliest'})
 print('Kafka Consumer has been initiated...')
-
-@app.route("/")
-def home():
-    return "Servicio de Recomendaciones en ejecución"
-
-@app.route('/recomendar', methods=['POST'])
-def recomendar():
-    data = request.json
-    video_id = data.get("video_id")
-
-    if not video_id:
-        return jsonify({"error": "Falta el video_id"}), 400
-
-    # Generar recomendaciones
-    recomendaciones = [f"video_recomendado_{i}" for i in range(1, 4)]
-
-    return jsonify({"video_id": video_id, "recomendaciones": recomendaciones})
-
 def consume_messages():
     c.subscribe(['ventas-topic'])
 
@@ -38,6 +21,15 @@ def consume_messages():
         data = msg.value().decode('utf-8')
         print(f"Mensaje recibido: {data}")
     c.close()
+
+    
+app = Flask(__name__)
+app_context = app.app_context()
+app_context.push()
+
+api = Api(app)
+api.add_resource(Home, '/')
+api.add_resource(Recomendaciones, '/recomendar')
 
 if __name__ == "__main__":
     # Iniciar el consumidor en un hilo separado
