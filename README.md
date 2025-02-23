@@ -7,7 +7,7 @@ Este proyecto contiene dos microservicios: recomendación y ventas, que se comun
 1. Clona el repositorio.
 2. cd recomendacion_service
 
-### Instalar el entorno
+### Instalar el entorno por proyecto
 
 ```bash
 python3 -m venv .venv
@@ -19,11 +19,11 @@ pip install -r requirements.txt
 docker compose up -d
 
 ### Levantar proyectos
-Ejecutar el producer en una terminal
-python3 ventas_service/app.py
+Ejecutar el producer en una terminal-ventas_service
+python3 app.py
 
-En otra terminal ejecutar el consumer
-python3 recomendacion_service/app.py
+En otra terminal ejecutar el consumer-recomendacion_service
+python3 app.py
 
 ### Prueba de reomendación
 curl -X POST http://127.0.0.1:5001/recomendar -H "Content-Type: application/json" -d '{"video_id": "12345"}'
