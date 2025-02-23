@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from confluent_kafka import Producer
 from flask_restful import Api
 from vistas import Home, Ventas
-import json
 
 
 

@@ -4,7 +4,12 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from flask_restful import Resource
+import json
+from confluent_kafka import Producer
 
+# Configurar el productor de Kafka
+p = Producer({'bootstrap.servers': 'localhost:9092'})
+print('Kafka Producer has been initiated...')
 
 class Home(Resource):
 
