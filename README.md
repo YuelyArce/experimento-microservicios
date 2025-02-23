@@ -7,7 +7,7 @@ Este proyecto contiene dos microservicios: recomendación y ventas, que se comun
 1. Clona el repositorio.
 2. cd recomendacion_service
 
-### Instalar el entorno por proyecto
+### Instalar el entorno por proyecto - ventas_service y recomendacion_service
 
 ```bash
 python3 -m venv .venv
