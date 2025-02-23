@@ -4,7 +4,6 @@ from flask_restful import Api
 import threading
 from vistas import Recomendaciones, Home
 
-
 # Configurar el consumidor de Kafka
 c = Consumer({'bootstrap.servers': 'localhost:9092', 'group.id': 'python-consumer', 'auto.offset.reset': 'earliest'})
 print('Kafka Consumer has been initiated...')

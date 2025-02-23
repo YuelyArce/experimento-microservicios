@@ -10,7 +10,6 @@ class Home(Resource):
     def get(self):
         return "Servicio de Recomendaciones en ejecución"
 
-
 class Recomendaciones(Resource):
 
     def post(self):
