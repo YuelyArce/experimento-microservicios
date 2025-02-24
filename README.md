@@ -9,6 +9,16 @@ Este proyecto contiene dos microservicios: recomendación y ventas, que se comun
 
 ### Instalar el entorno por proyecto - ventas_service y recomendacion_service
 
+cd ventas_service
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+cd recomendacion_service
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
