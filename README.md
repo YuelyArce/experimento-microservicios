@@ -48,3 +48,4 @@ entrar a http://localhost:9090/
 entrar a http://localhost:3000/
 usuario: admin
 contraseña: admin
+data connection: http://prometheus:9090
