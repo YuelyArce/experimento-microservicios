@@ -30,3 +30,11 @@ curl -X POST http://127.0.0.1:5001/recomendar -H "Content-Type: application/json
 
 ### Prueba de ventas
 curl -X POST http://localhost:5002/registroVenta -H "Content-Type: application/json" -d '{"producto_id": "123", "cantidad": 2, "precio": 10.5}'
+
+### abrir prometeus
+entrar a http://localhost:9090/
+
+### abrir grafana
+entrar a http://localhost:3000/
+usuario: admin
+contraseña: admin
