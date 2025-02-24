@@ -1,5 +1,7 @@
-version: '3'
+version: '3.8'
+
 services:
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
@@ -8,6 +10,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - backend_network
 
   broker:
     image: confluentinc/cp-kafka:7.0.1
@@ -29,3 +33,55 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: localhost
+    networks:
+     - backend_network
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter
+    container_name: kafka-exporter
+    ports:
+      - "9308:9308"
+    command:
+      - '--kafka.server=broker:29092'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - backend_network
+
+  rabbitmq-exporter:
+    image: kbudde/rabbitmq-exporter
+    container_name: rabbitmq-exporter
+    ports:
+      - "15693:15693"
+    environment:
+      - RABBIT_URL=http://rabbitmq:15672
+    networks:
+      - backend_network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - backend_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - backend_network
+
+volumes:
+  grafana_data:
+
+networks:
+    backend_network:
+      driver: bridge
