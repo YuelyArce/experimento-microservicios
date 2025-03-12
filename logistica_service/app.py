@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Api
 from modelos.modelos import db, Producto
 from datetime import datetime
-from vistas.vistas import Logistica
+from vistas.vistas import validar_token, ModificarProducto
 import json
 
 
@@ -53,7 +53,8 @@ with app.app_context():
         db.session.commit()
 
 api = Api(app)
-api.add_resource(Logistica, '/logistica')
+api.add_resource(validar_token, '/validar_token')
+api.add_resource(ModificarProducto, '/producto/<int:producto_id>')
 
 if __name__ == "__main__":
     # Iniciar el consumidor en un hilo separado
