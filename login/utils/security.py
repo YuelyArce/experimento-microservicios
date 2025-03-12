@@ -8,7 +8,7 @@ def write_token(data: dict):
     """
     
     now = datetime.utcnow()
-    exp = now - timedelta(hours=1)
+    exp = now + timedelta(hours=1)
 
     datos_encode = {
         'role': data.get('role'),
