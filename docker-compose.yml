@@ -48,16 +48,6 @@ services:
     networks:
       - backend_network
 
-  rabbitmq-exporter:
-    image: kbudde/rabbitmq-exporter
-    container_name: rabbitmq-exporter
-    ports:
-      - "15693:15693"
-    environment:
-      - RABBIT_URL=http://rabbitmq:15672
-    networks:
-      - backend_network
-
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -78,6 +68,49 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - backend_network
+
+  # MongoDB for Greylog
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - backend_network
+    restart: unless-stopped
+
+  # Elasticsearch for Greylog
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    container_name: elasticsearch
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - backend_network
+    restart: unless-stopped
+
+  # Greylog
+  greylog:
+    image: graylog/graylog:5.1
+    container_name: greylog
+    depends_on:
+      - mongo
+      - elasticsearch
+    environment:
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:9000/
+      - GRAYLOG_PASSWORD_SECRET=mysecretpassword
+      - GRAYLOG_ROOT_PASSWORD_SHA2=5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+    ports:
+      - "9000:9000"
+      - "12201:12201/udp" 
+    networks:
+      - backend_network
+    restart: unless-stopped
 
 volumes:
   grafana_data:
