@@ -58,6 +58,12 @@
     1. Clona el repositorio.
     2. cd experimento-microservicios
 
+    ### Levantar los contenedores
+    docker compose up -d
+    Ingresar desde el navegador a:http://localhost:9000
+        usuario:admin
+        contraseña:password
+
     ### Instalar el entorno por proyecto - login y logistica_service
 
     cd login
