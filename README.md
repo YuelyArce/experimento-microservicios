@@ -101,5 +101,5 @@
     ### Prueba de modificación de método de conservación en logistica_service
     curl -X PUT "http://127.0.0.1:4001/producto/1" \
      -H "Content-Type: application/json" \
-     -H "Token: se coía el token generado" \
+     -H "Token: se copia el token generado" \
      -d '{"tipo_almacenamiento": "Congelado"}'
