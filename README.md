@@ -69,7 +69,7 @@
     2️⃣ Selecciona “GELF UDP” y haz clic en “Launch new input”
     3️⃣ poner un nombre y verificar que la conexión en el puerto: 12201
 
-    ### Instalar el entorno por proyecto - login y logistica_service
+    ### Instalar el entorno por proyecto - login, auditoria y logistica_service
 
     cd login
 
@@ -86,11 +86,24 @@
     source .venv/bin/activate
     pip install -r requirements.txt
     ```
+
+    cd auditoria_service
+
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
     ### Levantar proyectos
+
     Ejecutar login en una terminal
     python3 app.py
 
     En otra terminal ejecutar logistica_service
+    python3 app.py
+
+    En otra terminal ejecutar auditoria_service
     python3 app.py
 
     ### Prueba de login
