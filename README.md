@@ -64,6 +64,11 @@
         usuario:admin
         contraseña:password
 
+    configurar graylog:
+    1️⃣ Ve a Graylog → “System / Inputs”
+    2️⃣ Selecciona “GELF UDP” y haz clic en “Launch new input”
+    3️⃣ poner un nombre y verificar que la conexión en el puerto: 12201
+
     ### Instalar el entorno por proyecto - login y logistica_service
 
     cd login
