@@ -1,4 +1,5 @@
 import requests
+from os import getenv
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 from datetime import datetime
@@ -6,9 +7,10 @@ from flask_restful import Resource
 from utils.security import write_token
 
 AUDITORIA_URL = "http://localhost:5004/evento"
+BLACK_URL =  "http://127.0.0.1:3001/black"
 
 usuarios_quemados = {
-    'omar': {'password': 'admin', 'role': 'ademin'},
+    'omar': {'password': 'admin', 'role': 'admin'},
     'adriana': {'password': '1234', 'role': 'vendedor'},
     'alejandra': {'password': '1234', 'role': 'tendero'},
     'sebastian': {'password': '1234', 'role': 'logistica'},
@@ -26,8 +28,15 @@ class Login(Resource):
             data = request.json
             usuario = data['usuario']
             password =  data['password']
-
-            if usuario in usuarios_quemados.keys() and usuarios_quemados[usuario]['password'] == password:
+            
+            header = {'TOKEN': getenv('TOKEN_BLACK')}
+            usuario_black = requests.get(
+                BLACK_URL, 
+                json={'usuario': usuario}, 
+                headers=header
+                )
+            usuario_in_black = usuario_black.json()['black']
+            if usuario in usuarios_quemados.keys() and usuarios_quemados[usuario]['password'] == password and not usuario_in_black:
                 data['role'] = usuarios_quemados[usuario]['role']
                 token = write_token(data)
 
