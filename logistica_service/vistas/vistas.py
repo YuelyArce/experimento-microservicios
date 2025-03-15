@@ -15,8 +15,10 @@ class validar_token(Resource):
         data_token, status_code = validate_token(headers["Token"])
         if status_code == 200:
             usuario = data_token.get("usuario")
+            rol = data_token.get("role")
             requests.post(AUDITORIA_URL, json={
                 "usuario": usuario,
+                "rol": rol,
                 "estado": "validación de token exitosa",
                 "detalles": "Token válido"
             })
@@ -35,6 +37,7 @@ class ModificarProducto(Resource):
         if status_code != 200:
             return make_response(jsonify(data_token), status_code)
         usuario = data_token.get("usuario", "Desconocido")
+        rol = data_token.get("role")
 
         # Buscar el producto en la base de datos
         producto = Producto.query.get(producto_id)
@@ -50,12 +53,13 @@ class ModificarProducto(Resource):
         new_value = data["tipo_almacenamiento"]
         producto.tipo_almacenamiento = new_value
 
-        # Guardar cambios y auditar
+
         try:
             db.session.commit()
             requests.post(AUDITORIA_URL, json={
                 "usuario": usuario,
                 "estado": "modificación exitosa",
+                "rol": rol,
                 "detalles": f"Producto ID {producto_id} actualizado de '{old_value}' a '{new_value}'"
             })
             return jsonify({"message": "Producto actualizado exitosamente"})

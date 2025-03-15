@@ -12,10 +12,11 @@ GRAYLOG_PORT = 12201
 handler = graypy.GELFUDPHandler(GRAYLOG_HOST, GRAYLOG_PORT)
 logger.addHandler(handler)
 
-def log_event(usuario, estado, detalles=""):
+def log_event(usuario, rol, estado, detalles=""):
     """Registra eventos en Graylog."""
     mensaje = {
         "usuario": usuario,
+        'rol':rol,
         "estado": estado,
         "detalles": detalles
     }

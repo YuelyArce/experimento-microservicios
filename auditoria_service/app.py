@@ -10,9 +10,10 @@ def registrar_evento():
     
     usuario = data.get("usuario", "desconocido")
     estado = data.get("estado", "desconocido")
+    rol= data.get("rol", "desconocido")
     detalles = data.get("detalles", "")
 
-    log_event(usuario, estado, detalles) 
+    log_event(usuario, rol, estado, detalles) 
 
     return jsonify({"mensaje": "Evento registrado con éxito"}), 201
 
