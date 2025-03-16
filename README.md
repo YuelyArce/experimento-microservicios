@@ -83,7 +83,7 @@
 
         4.definición del evento:
             1️⃣ Ve a Graylog → “Alerts” → "event definition" → create event definition
-            2️⃣ Poner titulo, poner pripridad del evento, seleccionar condiciones: 'Filter & Aggregation, definir query: 'rol != admin', seleccionar streams: default stream,
+            2️⃣ Poner titulo, poner pripridad del evento, seleccionar condiciones: 'Filter & Aggregation, definir query: 'NOT rol:admin', seleccionar streams: default stream,
             3️⃣ seguir a notificaciones y seleccionar la notificcación antes creada y crear.
 
         5.optimización del evento:
