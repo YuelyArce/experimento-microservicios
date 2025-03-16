@@ -52,7 +52,7 @@
 
 # Experimento Microservicios 2
 
-    Este proyecto contiene dos microservicios: login y logistica_service
+    Este proyecto contiene dos microservicios: login, auditoria_service, black_list_service y logistica_service
     ## Instalación
 
     1. Clona el repositorio.
@@ -64,12 +64,43 @@
         usuario:admin
         contraseña:password
 
-    configurar graylog:
-    1️⃣ Ve a Graylog → “System / Inputs”
-    2️⃣ Selecciona “GELF UDP” y haz clic en “Launch new input”
-    3️⃣ poner un nombre y verificar que la conexión en el puerto: 12201
+    configurar graylog 5.1:
 
-    ### Instalar el entorno por proyecto - login, auditoria y logistica_service
+        1.configuración de rastreo de eventos:
+            1️⃣ Ve a Graylog → “System / Inputs”
+            2️⃣ Selecciona “GELF UDP” y haz clic en “Launch new input”
+            3️⃣ poner un nombre y verificar que la conexión en el puerto: 12201
+
+        2.configurar extractor de datos:
+            1️⃣ Ve a Graylog → “Manage extractors” → create extractors → buscar 'message'
+            2️⃣ Selecciona “JSON' y luego Try para verificar funcionamiento
+            3️⃣ create extrator
+
+        3.configurar notificación:
+            1️⃣ Ve a Graylog → “Alerts” → "notifications" → create notification
+            2️⃣ Poner titulo, seleccionar tipo HTTP, usar esta url: http://host.docker.internal:5004/evento_graylog
+            3️⃣ create notifiación
+
+        4.definición del evento:
+            1️⃣ Ve a Graylog → “Alerts” → "event definition" → create event definition
+            2️⃣ Poner titulo, poner pripridad del evento, seleccionar condiciones: 'Filter & Aggregation, definir query: 'rol != admin', seleccionar streams: default stream,
+            3️⃣ seguir a notificaciones y seleccionar la notificcación antes creada y crear.
+
+        5.optimización del evento:
+            1️⃣ Ve a Graylog → “Alerts” → "event definition" → editar el evento antes creado
+            2️⃣ ir a Filter & Aggregation y configurar:
+                Search within the last:10 segundos
+                Execute search every: 10 segundos
+            3️⃣ ir a fields y 'add custom fields' y configurar:
+                name:usuario
+                set value from: template
+                Template:${source.usuario}
+            4️⃣ en notifications configurar:
+                Grace Period:0
+                Message Backlog:0
+
+
+    ### Instalar el entorno por proyecto - login, auditoria_service, black_list_service y logistica_service
 
     cd login
 
@@ -95,6 +126,14 @@
     pip install -r requirements.txt
     ```
 
+    cd black_list_service
+
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
     ### Levantar proyectos
 
     Ejecutar login en una terminal
@@ -105,6 +144,12 @@
 
     En otra terminal ejecutar auditoria_service
     python3 app.py
+
+    En otra terminal ejecutar black_list_service
+    python3 app.py
+
+
+    con esta prueba se bloqueara el usuario adriana:
 
     ### Prueba de login
     curl -X POST "http://localhost:5001/login" \
