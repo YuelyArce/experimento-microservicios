@@ -19,5 +19,21 @@ def registrar_evento():
 
     return jsonify({"mensaje": "Evento registrado con éxito"}), 201
 
+
+@app.route('/evento_graylog', methods=['POST'])
+def registrar_evento_graylog():
+    """Recibe eventos enviados desde Graylog y los registra en el sistema."""
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No se recibió JSON válido"}), 400
+
+    print("📥 Evento recibido desde Graylog")
+    usuario = data.get('event', {}).get('fields', {}).get('usuario', 'Desconocido')
+    print('el usuario es: ' + usuario)
+
+    return jsonify({"mensaje": "Evento recibido y registrado con éxito"}), 201
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5004)
