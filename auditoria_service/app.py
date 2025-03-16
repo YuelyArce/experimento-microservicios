@@ -7,6 +7,8 @@ app = Flask(__name__)
 def registrar_evento():
     """Recibe eventos de auditoría y los envía a Graylog"""
     data = request.get_json()
+
+    print(data)
     
     usuario = data.get("usuario", "desconocido")
     estado = data.get("estado", "desconocido")

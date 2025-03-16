@@ -1,11 +1,12 @@
 import logging
 import graypy
+import json
 
 # Configurar el logger
 logger = logging.getLogger('auditoria_logger')
 logger.setLevel(logging.INFO)
 
-# Reemplaza con la IP de tu servidor Graylog
+
 GRAYLOG_HOST = '127.0.0.1'
 GRAYLOG_PORT = 12201
 
@@ -16,8 +17,9 @@ def log_event(usuario, rol, estado, detalles=""):
     """Registra eventos en Graylog."""
     mensaje = {
         "usuario": usuario,
-        'rol':rol,
+        "rol":rol,
         "estado": estado,
         "detalles": detalles
     }
-    logger.info(mensaje)
+    json_mensaje = json.dumps(mensaje, ensure_ascii=False)
+    logger.info(json_mensaje)
