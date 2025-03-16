@@ -1,5 +1,7 @@
+import requests
 from flask import Flask, request, jsonify
 from utils.logger import log_event 
+
 
 app = Flask(__name__)
 
@@ -32,7 +34,13 @@ def registrar_evento_graylog():
     usuario = data.get('event', {}).get('fields', {}).get('usuario', 'Desconocido')
     print('el usuario es: ' + usuario)
 
-    return jsonify({"mensaje": "Evento recibido y registrado con éxito"}), 201
+    url = "http://localhost:3001/black"
+    headers = {"Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJ1c3VhcmlvIjoib21hciIsImV4cCI6MTc0NDg2NjIxMH0.5iQQimWqPPyuxuuGWQwVs5mAvRKG44t0Hw6vGH9F8Fs"}  # Token válido para autenticar
+    payload = {"usuario": usuario}
+
+    response = requests.post(url, json=payload, headers=headers)
+
+    return jsonify({"mensaje": "Usuario bloqueado correctamente. "})
 
 
 if __name__ == '__main__':
